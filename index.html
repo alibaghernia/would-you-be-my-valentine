@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #ffe6f0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ff1a75;
+        }
+
+        .buttons {
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #yesBtn {
+            background: #ff4da6;
+            color: white;
+        }
+
+        #noBtn {
+            background: #888;
+            color: white;
+            /*position: fixed;*/
+        }
+
+        #message {
+            font-size: 2rem;
+            margin-top: 30px;
+            color: #ff0066;
+            display: none;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 20px;
+            animation: fall 3s linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Would You Be My Valentine? ❤️</h1>
+
+    <div class="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+
+
+
+    <div id="message">I knew it 😎❤️</div>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const message = document.getElementById("message");
+
+        let noActivated = false;
+
+        function activateNoButton() {
+            if (!noActivated) {
+                noBtn.style.position = "fixed";
+                moveNoButton();
+                noActivated = true;
+            }
+        }
+
+        // محل تصادفی داخل صفحه
+        function moveNoButton() {
+            const padding = 20;
+
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
+        // وقتی موس نزدیک شد فرار کنه
+        document.addEventListener("mousemove", (e) => {
+            const rect = noBtn.getBoundingClientRect();
+
+            const distance = Math.hypot(
+                e.clientX - (rect.left + rect.width / 2),
+                e.clientY - (rect.top + rect.height / 2)
+            );
+
+            if (distance < 120) {
+                activateNoButton();
+                moveNoButton();
+            }
+        });
+
+        // جلوگیری از کلیک با موس
+        noBtn.addEventListener("mouseenter", () => { activateNoButton(); moveNoButton(); });
+        noBtn.addEventListener("mousedown", () => { activateNoButton(); moveNoButton(); });
+
+        // جلوگیری از لمس موبایل
+        noBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            activateNoButton();
+            moveNoButton();
+        });
+
+        // YES
+        yesBtn.onclick = () => {
+            noBtn.style.display = "none";
+            message.style.display = "block";
+            rainHearts();
+        };
+
+        // بارش قلب
+        function rainHearts() {
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.className = "heart";
+                heart.innerHTML = "❤️";
+
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = (Math.random() * 25 + 15) + "px";
+
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 3000);
+            }, 200);
+        }
+
+
+        // محل اولیه دکمه NO
+        moveNoButton();
+    </script>
+
+</body>
+
+</html>
